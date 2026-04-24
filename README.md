@@ -27,20 +27,59 @@ Quick setup with symlinks and automated installation script.
 
 ---
 
-## 🚀 Quick Setup
+## 🚀 Setup on a new machine
 
-### Clone & Install
+### Prerequisites
+
+- `git`, `bash` (4+), and `zsh` installed
+- Write access to `$HOME` and `$XDG_CONFIG_HOME` (defaults to `~/.config`)
+- Optional: JetBrains IDE with the IdeaVim plugin (for `.ideavimrc`)
+
+On Debian/Ubuntu: `sudo apt install git zsh`. On macOS: `git` and `zsh` ship with the system; install Xcode Command Line Tools with `xcode-select --install` if missing.
+
+### 1. Clone the repo
+
+The install script works from any path, but the rest of this README assumes `~/dotfiles`:
 
 ```bash
-# Clone repository
 git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-
-# Run installer (creates symlinks)
-bash scripts/install-xdg.sh
-
-# Restart your IDE/terminal
 ```
+
+### 2. Run the installer
+
+```bash
+bash scripts/install-xdg.sh
+```
+
+What it does:
+- creates `$XDG_CONFIG_HOME`, `~/.local/bin`, `$XDG_DATA_HOME`, `$XDG_STATE_HOME/zsh` if missing
+- symlinks `~/.zshenv`, `~/.bashrc`, `~/.ideavimrc`, and the `zsh`/`bash` configs under `~/.config/`
+- backs up any pre-existing regular file to `<path>.backup.<timestamp>` before replacing it
+
+The script is idempotent — re-running it is safe and only re-links what changed.
+
+### 3. Start a fresh shell
+
+The new `~/.zshenv` sets `ZDOTDIR`, which only takes effect in a new shell:
+
+```bash
+exec zsh   # or: exec bash
+```
+
+### 4. Verify
+
+```bash
+bash scripts/verify.sh
+```
+
+Exit code `0` = healthy. On failure it prints which symlink, env var, or syntax check is broken.
+
+### 5. (Optional) IDE setup
+
+For WebStorm / IntelliJ:
+1. Install the **IdeaVim** and **IdeaVim-EasyMotion** plugins.
+2. Restart the IDE — it picks up `~/.ideavimrc` automatically.
 
 ---
 

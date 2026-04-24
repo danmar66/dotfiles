@@ -30,7 +30,6 @@ There is no test suite. To validate a config edit, re-run `bash scripts/install-
 - `~/.bashrc` is a thin wrapper that sources `$XDG_CONFIG_HOME/bash/bashrc`. Bash does not read `$XDG_CONFIG_HOME` natively, so a bootstrap in `$HOME` is required.
 - IdeaVim reads only `~/.ideavimrc` (JetBrains hard-codes the path); the repo file at `.config/ideavim/ideavimrc` is symlinked there directly, not into `$XDG_CONFIG_HOME/ideavim/`.
 - `.config/vim/` and `.config/nvim/` are empty placeholder directories. To populate either: drop the config file in, add a `link_file` call in `scripts/install-xdg.sh`. For vim, `.config/zsh/.zprofile` already picks up `$XDG_CONFIG_HOME/vim/vimrc` via a guarded `VIMINIT` export when the file appears. Neovim has native XDG support; no env var needed.
-- `CLAUDE_CODE_TASKS.md` is the historical migration plan. Consult it for rationale on design decisions (ZDOTDIR placement, empty-dir handling, etc).
 
 ## IdeaVim config notes
 
