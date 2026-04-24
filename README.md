@@ -23,6 +23,7 @@ Quick setup with symlinks and automated installation script.
 
 ### Development Tools
 - **Tmux** - Terminal multiplexer config with Alt-key bindings and TPM plugins (gruvbox, resurrect, continuum)
+- **Kanata** - Keyboard remapper config (Miryoku-style home-row mods + NAV/SYM layers, HyperX Alloy FPS Pro)
 - **Other** - EditorConfig, Prettier config
 
 ---
@@ -33,6 +34,8 @@ Quick setup with symlinks and automated installation script.
 
 - `git`, `bash` (4+), and `zsh` installed
 - Write access to `$HOME` and `$XDG_CONFIG_HOME` (defaults to `~/.config`)
+- Optional: `tmux` 3.1+ (for `.config/tmux/tmux.conf`)
+- Optional: [`kanata`](https://github.com/jtroo/kanata) (for `.config/kanata/kanata.kbd` — note: the config hardcodes a HyperX Alloy FPS Pro device path and will need editing for other keyboards)
 - Optional: JetBrains IDE with the IdeaVim plugin (for `.ideavimrc`)
 
 On Debian/Ubuntu: `sudo apt install git zsh`. On macOS: `git` and `zsh` ship with the system; install Xcode Command Line Tools with `xcode-select --install` if missing.
@@ -127,6 +130,8 @@ dotfiles/
 │   │   └── bashrc              # → ~/.config/bash/bashrc
 │   ├── tmux/
 │   │   └── tmux.conf           # → ~/.config/tmux/tmux.conf
+│   ├── kanata/
+│   │   └── kanata.kbd          # → ~/.config/kanata/kanata.kbd
 │   ├── ideavim/
 │   │   └── ideavimrc           # → ~/.ideavimrc (JetBrains reads $HOME)
 │   ├── vim/                    # placeholder, empty

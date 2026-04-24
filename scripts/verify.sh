@@ -86,6 +86,7 @@ check_symlink "$XDG_CONFIG_HOME/zsh/.zshrc"
 check_symlink "$XDG_CONFIG_HOME/zsh/.zprofile"
 check_symlink "$XDG_CONFIG_HOME/bash/bashrc"
 check_symlink "$XDG_CONFIG_HOME/tmux/tmux.conf"
+check_symlink "$XDG_CONFIG_HOME/kanata/kanata.kbd"
 
 # 6-8. syntax checks
 log_info "--- syntax ---"
