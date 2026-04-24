@@ -85,6 +85,7 @@ check_symlink "$HOME/.ideavimrc"
 check_symlink "$XDG_CONFIG_HOME/zsh/.zshrc"
 check_symlink "$XDG_CONFIG_HOME/zsh/.zprofile"
 check_symlink "$XDG_CONFIG_HOME/bash/bashrc"
+check_symlink "$XDG_CONFIG_HOME/tmux/tmux.conf"
 
 # 6-8. syntax checks
 log_info "--- syntax ---"

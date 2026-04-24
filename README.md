@@ -22,7 +22,7 @@ Quick setup with symlinks and automated installation script.
 - Aliases, functions, prompt customization
 
 ### Development Tools
-- **Terminal** - Tmux configuration
+- **Tmux** - Terminal multiplexer config with Alt-key bindings and TPM plugins (gruvbox, resurrect, continuum)
 - **Other** - EditorConfig, Prettier config
 
 ---
@@ -75,7 +75,18 @@ bash scripts/verify.sh
 
 Exit code `0` = healthy. On failure it prints which symlink, env var, or syntax check is broken.
 
-### 5. (Optional) IDE setup
+### 5. (Optional) tmux plugins
+
+The tmux config uses [TPM](https://github.com/tmux-plugins/tpm). To install it and the declared plugins:
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
+tmux new -d -s _plugins 'echo installing' \; run-shell '~/.config/tmux/plugins/tpm/bin/install_plugins' \; kill-session -t _plugins
+```
+
+Or, from inside a running tmux session: `prefix + I`.
+
+### 6. (Optional) IDE setup
 
 For WebStorm / IntelliJ:
 1. Install the **IdeaVim** and **IdeaVim-EasyMotion** plugins.
@@ -114,6 +125,8 @@ dotfiles/
 │   │   └── .zprofile           # → ~/.config/zsh/.zprofile
 │   ├── bash/
 │   │   └── bashrc              # → ~/.config/bash/bashrc
+│   ├── tmux/
+│   │   └── tmux.conf           # → ~/.config/tmux/tmux.conf
 │   ├── ideavim/
 │   │   └── ideavimrc           # → ~/.ideavimrc (JetBrains reads $HOME)
 │   ├── vim/                    # placeholder, empty

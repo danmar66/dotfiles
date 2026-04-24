@@ -37,6 +37,7 @@ do_link "$DOTFILES_DIR/.bashrc"                   "$HOME/.bashrc"
 do_link "$DOTFILES_DIR/.config/zsh/.zshrc"        "$XDG_CONFIG_HOME/zsh/.zshrc"
 do_link "$DOTFILES_DIR/.config/zsh/.zprofile"     "$XDG_CONFIG_HOME/zsh/.zprofile"
 do_link "$DOTFILES_DIR/.config/bash/bashrc"       "$XDG_CONFIG_HOME/bash/bashrc"
+do_link "$DOTFILES_DIR/.config/tmux/tmux.conf"    "$XDG_CONFIG_HOME/tmux/tmux.conf"
 do_link "$DOTFILES_DIR/.config/ideavim/ideavimrc" "$HOME/.ideavimrc"
 
 log_ok "install-xdg.sh done: processed $links link(s)"
