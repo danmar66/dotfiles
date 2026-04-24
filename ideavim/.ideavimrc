@@ -1,0 +1,182 @@
+" .ideavimrc - WebStorm + IdeaVim Configuration
+" User preferences prioritized
+
+" === PLUGINS ===
+" Plug 'machakann/vim-highlightedyank'
+" Plug 'tpope/vim-commentary'
+
+" === BASIC SETTINGS ===
+let mapleader=" "
+set which-key
+set easymotion
+set number
+set relativenumber
+set scrolloff=8
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set clipboard^=unnamed,unnamedplus
+set matchpairs+=<:>
+set ideajoin
+
+" === REDO ===
+noremap U <C-r>
+
+" === REGISTERS ===
+noremap \ "_
+xnoremap p P
+
+" === SEARCH ===
+set hlsearch
+nnoremap <Esc> :nohlsearch<cr>
+set ignorecase
+set smartcase
+set incsearch
+
+" === WORD NAVIGATION (camelCase aware) ===
+map w [w
+map e ]w
+map b [b
+map ge ]b
+
+" === CONFIG MANAGEMENT ===
+noremap <leader>cc :edit ~/.ideavimrc<cr>
+noremap <leader>cs :source ~/.ideavimrc<cr>:nohlsearch<cr>
+
+" === WINDOW NAVIGATION (User preference: Alt+hjkl) ===
+map <A-h> <C-w>h
+map <A-j> <C-w>j
+map <A-k> <C-w>k
+map <A-l> <C-w>l
+
+" === SPLIT WINDOWS ===
+map <leader>wv <Action>(SplitVertically)
+map <leader>wh <Action>(SplitHorizontally)
+map <leader>ww <Action>(Unsplit)
+map <leader>wa <Action>(UnsplitAll)
+
+" === GOTO/NAVIGATION ===
+map <leader>sc <Action>(GotoClass)
+map <leader>sf <Action>(GotoFile)
+map <leader>ss <Action>(GotoSymbol)
+map <leader>sa <Action>(GotoAction)
+map <leader>gd <Action>(GotoDeclaration)
+map <leader>gy <Action>(GotoTypeDeclaration)
+map <leader>gi <Action>(GotoImplementation)
+map <leader>gt <Action>(GotoTest)
+map <leader>gm <Action>(GotoSuperMethod)
+map <leader>gl <Action>(GotoLine)
+
+" === USAGES ===
+map <leader>ug <Action>(FindUsages)
+map <leader>uu <Action>(ShowUsages)
+map <leader>vs <Action>(ViewSource)
+map <leader>im <Action>(QuickImplementations)
+map <leader>td <Action>(QuickTypeDefinition)
+map <leader>ti <Action>(ExpressionTypeInfo)
+map <leader>sh <Action>(ShowHoverInfo)
+
+" === FILE STRUCTURE ===
+map <leader>oo <Action>(FileStructurePopup)
+
+" === SEARCH & REPLACE ===
+map <S-f> <Action>(Find)
+map <S-r> <Action>(Replace)
+map <leader>ff <Action>(FindInPath)
+map <leader>fr <Action>(ReplaceInPath)
+
+" === REFACTORING ===
+map <leader>rn <Action>(RenameElement)
+map <leader>rm <Action>(ExtractMethod)
+map <leader>rv <Action>(IntroduceVariable)
+map <leader>rf <Action>(IntroduceField)
+map <leader>rs <Action>(ChangeSignature)
+map <leader>rr <Action>(Refactorings.QuickListPopupAction)
+
+" === ACTIONS & GENERATION ===
+map <leader>aa <Action>(ShowIntentionActions)
+map <leader>sw <Action>(SurroundWith)
+map <S-space> <Action>(Generate)
+
+" === CODE GENERATION & DUPLICATION ===
+map <S-k> <Action>(EditorDuplicateLines)
+
+" === CODE MANIPULATION ===
+map <C-[> <Action>(EditorCompleteStatement)
+map <leader>en <Action>(GotoNextError)
+map <leader>ep <Action>(GotoPreviousError)
+map <leader>lc <Action>(JumpToLastChange)
+map <leader>ll <Action>(RecentLocations)
+map <C-;> <Action>(RecentFiles)
+
+" === NAVIGATION (forward/back) ===
+map <S-l> <Action>(Forward)
+map <S-h> <Action>(Back)
+
+" === METHOD NAVIGATION ===
+map <A-[> <Action>(MethodUp)
+map <A-]> <Action>(MethodDown)
+
+" === CODE FORMATTING & ORGANIZATION ===
+map <leader><leader> <Action>(ReformatCode)
+map <leader>oi <Action>(OptimizeImports)
+map <leader>ra <Action>(RearrangeCode)
+
+" === LINE MOVEMENT (User preference: Ctrl+kl) ===
+map <C-k> <Action>(MoveLineDown)
+map <C-l> <Action>(MoveLineUp)
+map <C-i> <Action>(MoveStatementDown)
+map <C-o> <Action>(MoveStatementUp)
+
+" === FILE OPERATIONS ===
+map <leader>ca <Action>(CopyAbsolutePath)
+map <leader>cn <Action>(CopyFileName)
+map <leader>cp <Action>(CopyContentRootPath)
+map <leader>fs <Action>(NewScratchFile)
+map <leader>qq <Action>(CloseContent)
+map <leader>qa <Action>(CloseAllEditors)
+map <leader>nf <Action>(NewFile)
+map <leader>nd <Action>(NewDir)
+map <leader>re <Action>(RenameFile)
+map <leader>of <Action>(OpenFile)
+
+" === TERMINAL ===
+" F12 - WebStorm standard key to toggle terminal
+nnoremap <leader>tt :action ActivateTerminalToolWindow<CR>
+
+" === EASYMOTION ===
+map <leader><leader>w <Plug>(easymotion-w)
+map <leader><leader>b <Plug>(easymotion-b)
+map <leader><leader>j <Plug>(easymotion-j)
+map <leader><leader>k <Plug>(easymotion-k)
+
+" === CLAUDE WORKFLOW ===
+vnoremap <leader>af y:action ActivateTerminalToolWindow<CR>iFix this code:<CR><Esc>pa
+vnoremap <leader>ae y:action ActivateTerminalToolWindow<CR>iExplain this code:<CR><Esc>pa
+vnoremap <leader>ar y:action ActivateTerminalToolWindow<CR>iRefactor this code:<CR><Esc>pa
+vnoremap <leader>aw y:action ActivateTerminalToolWindow<CR>iWrite tests:<CR><Esc>pa
+
+" === IDE OPERATIONS ===
+map <leader>ri <Action>(RestartIde)
+
+" === BASIC NAVIGATION ===
+nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+" TODO: remove?
+" nnoremap <leader>h :nohlsearch<CR>
+
+" === FILE OPERATIONS ===
+nnoremap <leader>w :w<CR>
+nnoremap <leader>q :q<CR>
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+
+" === SELECTION & INDENTATION ===
+vnoremap < <gv
+vnoremap > >gv
+
+" === COMMENTS ===
+nnoremap <leader>/ :action CommentByLineComment<CR>
+vnoremap <leader>/ :action CommentByLineComment<CR>
