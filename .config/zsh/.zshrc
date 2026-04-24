@@ -74,6 +74,9 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# oh-my-zsh resets HISTFILE to $ZDOTDIR/.zsh_history; restore XDG location.
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"

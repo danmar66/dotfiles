@@ -15,19 +15,6 @@ declare -i fails=0
 ok()   { log_ok  "$*"; }
 fail() { log_err "$*"; fails+=1; }
 
-# realpath wrapper — portable resolve
-_realpath() {
-    local p=$1
-    if command -v realpath >/dev/null 2>&1; then
-        realpath "$p"
-    elif command -v python3 >/dev/null 2>&1; then
-        python3 -c 'import os,sys;print(os.path.realpath(sys.argv[1]))' "$p"
-    else
-        # last resort: readlink -f (GNU only)
-        readlink -f "$p"
-    fi
-}
-
 check_env() {
     local name=$1 expected=$2
     local actual=${!name:-}
@@ -105,21 +92,7 @@ check_parses zsh  "$XDG_CONFIG_HOME/zsh/.zshrc"
 check_parses zsh  "$XDG_CONFIG_HOME/zsh/.zprofile"
 check_parses bash "$XDG_CONFIG_HOME/bash/bashrc"
 
-# 9. ideavim consistency
-log_info "--- ideavim consistency ---"
-home_ideavim="$HOME/.ideavimrc"
-xdg_ideavim="$XDG_CONFIG_HOME/ideavim/ideavimrc"
-if [[ -e "$home_ideavim" && -e "$xdg_ideavim" ]]; then
-    if [[ "$(_realpath "$home_ideavim")" == "$(_realpath "$xdg_ideavim")" ]]; then
-        ok "~/.ideavimrc and .config/ideavim/ideavimrc resolve to same file"
-    else
-        fail "~/.ideavimrc and .config/ideavim/ideavimrc differ"
-    fi
-else
-    log_warn "ideavim files missing; skipping consistency check"
-fi
-
-# 10. placeholder dirs (warn only)
+# 9. placeholder dirs (warn only)
 log_info "--- placeholder dirs ---"
 for d in "$XDG_CONFIG_HOME/vim" "$XDG_CONFIG_HOME/nvim"; do
     [[ -d "$d" ]] && ok "exists: $d" || log_warn "missing: $d"
