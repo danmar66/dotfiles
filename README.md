@@ -37,26 +37,25 @@ git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
 # Run installer (creates symlinks)
-bash install.sh
+bash scripts/install-xdg.sh
 
 # Restart your IDE/terminal
 ```
 
-### Manual Setup (if preferred)
+---
+
+## 🔄 Migration from pre-XDG layout
+
+The repo previously kept configs under `ideavim/`, `shell/`, etc. It now follows the XDG Base Directory spec (`~/.config/<tool>/`). If you cloned before this change, run:
 
 ```bash
-# IdeaVim
-cp ideavim/.ideavimrc ~/.ideavimrc
-
-# Git
-cp git/.gitconfig ~/.gitconfig
-
-# Bash
-cp shell/.bashrc ~/.bashrc
-
-# Zsh  
-cp shell/.zshrc ~/.zshrc
+git pull
+bash scripts/migrate-xdg.sh
+exec $SHELL
+bash scripts/verify.sh
 ```
+
+Rollback: a tar snapshot of the pre-migration state is saved at `~/.cache/dotfiles-backups/pre-xdg.<timestamp>.tar.gz`. Restore with `git reset --hard HEAD && tar xzf ~/.cache/dotfiles-backups/pre-xdg.<timestamp>.tar.gz -C ~/dotfiles`.
 
 ---
 
@@ -64,30 +63,28 @@ cp shell/.zshrc ~/.zshrc
 
 ```
 dotfiles/
-├── .gitignore              # Git ignore rules
-├── README.md               # This file
-├── install.sh              # Automated installer
+├── .gitignore
+├── README.md
+├── CLAUDE.md                   # Agent guidance
+├── .zshenv                     # → ~/.zshenv (sets ZDOTDIR)
+├── .bashrc                     # → ~/.bashrc (thin XDG wrapper)
 │
-├── vim/                    # Vim/IdeaVim configs
-│   └── .ideavimrc          # IdeaVim main config
+├── .config/                    # mirrors ~/.config/
+│   ├── zsh/
+│   │   ├── .zshrc              # → ~/.config/zsh/.zshrc
+│   │   └── .zprofile           # → ~/.config/zsh/.zprofile
+│   ├── bash/
+│   │   └── bashrc              # → ~/.config/bash/bashrc
+│   ├── ideavim/
+│   │   └── ideavimrc           # → ~/.ideavimrc (JetBrains reads $HOME)
+│   ├── vim/                    # placeholder, empty
+│   └── nvim/                   # placeholder, empty
 │
-├── git/                    # Git configuration
-│   └── .gitconfig          # Git config
-│
-├── shell/                  # Shell configurations
-│   ├── .bashrc             # Bash config
-│   ├── .zshrc              # Zsh config
-│   └── .bash_profile       # Bash profile
-│
-├── ide/                    # IDE configurations
-│   └── webstorm/           # WebStorm specific
-│
-├── terminal/               # Terminal tools
-│   └── .tmux.conf          # Tmux configuration
-│
-└── other/                  # Other configs
-    ├── .editorconfig       # EditorConfig
-    └── .prettierrc         # Prettier config
+└── scripts/
+    ├── lib/common.sh           # shared bash helpers
+    ├── install-xdg.sh          # create symlinks
+    ├── migrate-xdg.sh          # one-shot repo layout migration
+    └── verify.sh               # health check (exit 0/1)
 ```
 
 ---
@@ -120,43 +117,22 @@ dotfiles/
 
 ## 🔄 Updating Configurations
 
-### When you modify a config file
+Configs are symlinks into this repo, so edits are already in git:
 
 ```bash
-# 1. The changes are automatically in git (if using symlinks)
-# or manually copy:
-cp ~/.ideavimrc ~/dotfiles/ideavim/.ideavimrc
-
-# 2. Commit changes
 cd ~/dotfiles
-git add ideavim/.ideavimrc
-git commit -m "Update IdeaVim configuration"
-
-# 3. Push to remote
-git push origin main
+git status
+git commit -am "Update config"
+git push
 ```
 
 ### On another machine
 
 ```bash
 cd ~/dotfiles
-git pull origin main
-bash install.sh
+git pull
+bash scripts/install-xdg.sh
 ```
-
----
-
-## 🔗 Symlinks (Recommended)
-
-For automatic synchronization, use symlinks:
-
-```bash
-# Instead of copying, use symlinks:
-ln -s ~/dotfiles/ideavim/.ideavimrc ~/.ideavimrc
-ln -s ~/dotfiles/git/.gitconfig ~/.gitconfig
-```
-
-This way, any changes sync immediately without copying.
 
 ---
 
@@ -164,24 +140,16 @@ This way, any changes sync immediately without copying.
 
 ### Backup Original Files
 
-The installer automatically backs up existing files:
+The installer automatically backs up any existing file before replacing it with a symlink:
 ```
 ~/.ideavimrc → ~/.ideavimrc.backup.TIMESTAMP
 ```
 
-### Using Different Configs Per Machine
+### Adding a new config
 
-Create machine-specific branches:
-```bash
-git checkout -b macos
-git checkout -b linux
-```
-
-### Add New Configurations
-
-1. Copy config to appropriate directory
-2. Update `install.sh` with symlink
-3. Commit and push
+1. Drop the config under `.config/<tool>/` in this repo.
+2. Add a matching `link_file` call to `scripts/install-xdg.sh`.
+3. Re-run `bash scripts/install-xdg.sh`.
 
 ---
 
@@ -216,26 +184,14 @@ cat ~/.ideavimrc
 
 ### Symlink conflicts
 ```bash
-# Remove old file and recreate symlink
-rm ~/.ideavimrc
-ln -s ~/dotfiles/ideavim/.ideavimrc ~/.ideavimrc
+# Re-run the installer; it backs up conflicts and relinks.
+bash scripts/install-xdg.sh
 ```
 
-### Install script permissions
+### Verify installation
 ```bash
-# Make script executable
-chmod +x ~/dotfiles/install.sh
-bash install.sh
+bash scripts/verify.sh
 ```
-
----
-
-## 📚 Documentation
-
-- `DOTFILES_SETUP.md` - Detailed setup guide
-- `QUICK_DOTFILES_SETUP.md` - Quick start guide
-- `KEYBOARD_TERMINAL_GUIDE.md` - Terminal keybindings
-- `MERGE_REPORT.md` - Config merge details
 
 ---
 
@@ -279,9 +235,8 @@ MIT License - Feel free to use as template for your dotfiles.
 If you encounter issues:
 
 1. Check troubleshooting section above
-2. Review `QUICK_DOTFILES_SETUP.md`
-3. Run `bash install.sh -v` for verbose output
-4. Check WebStorm/IDE logs
+2. Run `bash scripts/verify.sh` to diagnose
+3. Check WebStorm/IDE logs
 
 ---
 
@@ -301,6 +256,6 @@ After installation:
 For updates and syncing across machines:
 ```bash
 cd ~/dotfiles
-git pull origin main
-bash install.sh
+git pull
+bash scripts/install-xdg.sh
 ```
