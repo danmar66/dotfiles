@@ -1,5 +1,29 @@
-;; Miryoku-LITE для HyperX Alloy FPS Pro (TKL 80% ANSI, Cherry MX Red)
-;; Home row mods (GASC) + CapsLock = Esc/NAV
+;; Miryoku 60_ansi_subset (row-shifted alphas, custom variant) для HyperX Alloy FPS Pro (TKL ANSI)
+;; Ref: https://github.com/manna-harbour/miryoku
+;;
+;; Number row → Miryoku TOP alphas:
+;;   1=q  2=w  3=e  4=r  5=t  |  6=y  7=u  [8=plain]  9=o  0=i  -=p  [==plain]
+;;   (Right-side i/o swapped relative to canonical reading order)
+;;
+;; QWERTY row → Miryoku HOME row + GACS:
+;;   q=a/met  w=s/alt  e=d/ctl  r=f/sft  t=g  |  y=h  u=j/sft  i=l/alt  o=k/ctl  p=;/met
+;;   (i and o letters swapped relative to canonical: i taps L, o taps K)
+;;
+;; ANSI home row → Miryoku BOTTOM alphas (plain):
+;;   a=z  s=x  d=c  f=v  g=b  |  h=n  j=m  k=,  l=.  ;=/
+;;
+;; Layer-triggers НА фізичному bottom row:
+;;   x=MEDIA  c=NAV  v=MOUSE  | n=SYM  m=NUM  ,=FUN
+;;   (z, b, ., / — plain letters)
+;;
+;; Modifier row (lctl/lmet/lalt | ralt/menu/rctl) — plain. Spacebar — простий spc.
+;; CapsLock → Esc.
+;; Clipboard — WIN (C-z/x/c/v/y).
+;; Mouse buttons на cluster keys: ret=LMB, bspc=RMB, del=MMB.
+;; Transport: bspc=mute, del=playpause, ret=XX (stop недоступний у kanata 1.11).
+;;
+;; Timings: 200ms tap, 200ms hold, tap-hold-release (permissive-hold).
+;; Аварійний exit kanata: Lctrl+Spc+Esc (фізичні defsrc keys).
 
 (defcfg
   linux-dev /dev/input/by-id/usb-Kingston_HyperX_Alloy_FPS_Pro_Mechanical_Gaming_Keyboard-event-kbd
@@ -17,64 +41,127 @@
   tab  q    w    e    r    t     y    u    i    o     p    [    ]    \      del  end  pgdn
   caps a    s    d    f    g     h    j    k    l     ;    '    ret
   lsft z    x    c    v    b     n    m    ,    .     /    rsft                  up
-  lctl lmet lalt                 spc                  ralt menu rctl      left  down right
+  lctl lmet lalt                 spc                  ralt menu rctl      left down right
 )
 
 (defalias
-  ;; Home row mods (GASC — Miryoku дзеркальний порядок)
-  ;; tap-hold-release: hold спрацьовує тільки якщо ви натиснули
-  ;; І відпустили другу клавішу, поки тримаєте першу.
-  ;; При rolling (відпускаєте першу раніше) — завжди tap.
-  a (tap-hold-release $tap-time $hold-time a lmet)
-  s (tap-hold-release $tap-time $hold-time s lalt)
-  d (tap-hold-release $tap-time $hold-time d lctl)
-  f (tap-hold-release $tap-time $hold-time f lsft)
-  j (tap-hold-release $tap-time $hold-time j rsft)
-  k (tap-hold-release $tap-time $hold-time k rctl)
-  l (tap-hold-release $tap-time $hold-time l lalt)
-  ; (tap-hold-release $tap-time $hold-time ; rmet)
+  ;; ── Home-row mods (GACS) на QWERTY row ──
+  ;; tap = Miryoku-functional letter, hold = mod (mod follows letter, not finger)
+  hm-q (tap-hold-release $tap-time $hold-time a lmet)
+  hm-w (tap-hold-release $tap-time $hold-time s lalt)
+  hm-e (tap-hold-release $tap-time $hold-time d lctl)
+  hm-r (tap-hold-release $tap-time $hold-time f lsft)
+  hm-u (tap-hold-release $tap-time $hold-time j rsft)
+  hm-i (tap-hold-release $tap-time $hold-time k rctl)   ;; i taps K (Miryoku RM-home, ctl mod)
+  hm-o (tap-hold-release $tap-time $hold-time l lalt)   ;; o taps L (Miryoku RR-home, alt mod)
+  hm-p (tap-hold-release $tap-time $hold-time ; rmet)
 
-  ;; CapsLock: коротко = Esc, утримати = NAV
-  cap (tap-hold-release $tap-time $hold-time esc (layer-while-held nav))
+  ;; ── Layer-triggers на фізичному bottom row ──
+  lt-x     (tap-hold-release $tap-time $hold-time x (layer-while-held media))
+  lt-c     (tap-hold-release $tap-time $hold-time c (layer-while-held nav))
+  lt-v     (tap-hold-release $tap-time $hold-time v (layer-while-held mouse))
+  lt-n     (tap-hold-release $tap-time $hold-time n (layer-while-held sym))
+  lt-m     (tap-hold-release $tap-time $hold-time m (layer-while-held num))
+  lt-comma (tap-hold-release $tap-time $hold-time , (layer-while-held fun))
 
-  ;; Space: коротко = пробіл, утримати = SYM-шар
-  spc (tap-hold-release $tap-time $hold-time spc (layer-while-held sym))
+  ;; ── Clipboard (WIN) ──
+  cb-und C-z
+  cb-cut C-x
+  cb-cpy C-c
+  cb-pst C-v
+  cb-rdo C-y
+
+  ;; ── Mouse-рух (kanata native accel: interval accel-time min-dist max-dist) ──
+  mm-u (movemouse-accel-up    10 1000 2 20)
+  mm-d (movemouse-accel-down  10 1000 2 20)
+  mm-l (movemouse-accel-left  10 1000 2 20)
+  mm-r (movemouse-accel-right 10 1000 2 20)
 )
 
+;; ==========================================================================
+;; BASE
+;; ==========================================================================
 (deflayer base
   esc       f1   f2   f3   f4    f5   f6   f7   f8    f9   f10  f11  f12    prnt slck pause
-  grv  1    2    3    4    5     6    7    8    9     0    -    =    bspc   ins  home pgup
-  tab  q    w    e    r    t     y    u    i    o     p    [    ]    \      del  end  pgdn
-  @cap @a   @s   @d   @f   g     h    @j   @k   @l   @;    '    ret
-  lsft z    x    c    v    b     n    m    ,    .     /    rsft                  up
-  lctl lmet lalt                 @spc                 ralt menu rctl      left  down right
+  grv  q    w    e    r    t     y    u    i    o     p    -    =    bspc   ins  home pgup
+  tab  @hm-q @hm-w @hm-e @hm-r g  h    @hm-u @hm-i @hm-o @hm-p [    ]    \    del  end  pgdn
+  esc  z    x    c    v    b     n    m    ,    .     /    '    ret
+  lsft z    @lt-x @lt-c @lt-v b   @lt-n @lt-m @lt-comma .    /    rsft                 up
+  lctl lmet lalt                 spc                  ralt menu rctl      left down right
 )
 
-;; NAV-шар: hjkl → стрілки, uiop → home/pgdn/pgup/end
+;; ==========================================================================
+;; NAV  (hold physical c)  — права рука: курсор + clipboard
+;; Note: i/o swap → physical i = up, physical o = down (Miryoku l/k positions)
+;; ==========================================================================
 (deflayer nav
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
-  _    _    _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
-  _    _    _    _    _    _     _    home pgdn pgup  end  _    _    _      _    _    _
-  _    _    _    _    _    _     left down up   rght  _    _    _
-  _    _    _    _    _    _     _    _    _    _     _    _                     _
-  _    _    _                    _                    _    _    _         _    _    _
+  _    XX   XX   XX   XX   XX    @cb-rdo @cb-pst _    @cb-cut @cb-cpy @cb-und _    _    _    _    _
+  _    lmet lalt lctl lsft XX    caps left up   down  rght _    _    _    _    _    _
+  _    XX   XX   XX   XX   XX    ins  home pgdn pgup  end  _    _
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    _                    _    _    _           _    _    _
 )
 
-;; SYM-шар: ліва рука = символи, права рука = модифікатори (дзеркально HRM)
-;; Активується утриманням Space
-;;
-;; Розкладка символів:
-;;   Q W E R T      { & * ( }
-;;   A S D F G      : $ % ^ +
-;;   Z X C V B      ~ ! @ # |
-;;
-;; Права рука: _ _ _ _ _ + модифікатори на home row
-;; Thumb: Space вже утримується, інші думби можна використати як ( ) _
+;; ==========================================================================
+;; MOUSE  (hold physical v)  — права рука: рух миші + clipboard
+;; Buttons: ret=LMB (mltp), bspc=RMB (mrtp), del=MMB (mmtp)
+;; ==========================================================================
+(deflayer mouse
+  _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
+  _    XX   XX   XX   XX   XX    @cb-rdo @cb-pst _    @cb-cut @cb-cpy @cb-und _    mrtp _    _    _
+  _    lmet lalt lctl lsft XX    XX   @mm-l @mm-u @mm-d @mm-r _    _    _    mmtp _    _
+  _    XX   XX   XX   XX   XX    XX   XX   XX   XX    XX   _    mltp
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    _                    _    _    _           _    _    _
+)
+
+;; ==========================================================================
+;; MEDIA  (hold physical x)  — права рука: транспорт + гучність
+;; Thumbs: bspc=mute, del=playpause, ret=XX (stop недоступний)
+;; Note: i/o swap → physical i = volu, physical o = vold
+;; ==========================================================================
+(deflayer media
+  _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
+  _    XX   XX   XX   XX   XX    XX   XX   _    XX    XX   XX   _    mute _    _    _
+  _    lmet lalt lctl lsft XX    XX   prev volu vold  next _    _    _    pp   _    _
+  _    XX   XX   XX   XX   XX    XX   XX   XX   XX    XX   _    XX
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    _                    _    _    _           _    _    _
+)
+
+;; ==========================================================================
+;; NUM  (hold physical m)  — ліва рука: numpad; spc=0
+;; ==========================================================================
+(deflayer num
+  _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
+  _    [    7    8    9    ]     XX   XX   _    XX    XX   XX   _    _    _    _    _
+  _    ;    4    5    6    =     XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    grv  1    2    3    \     XX   XX   XX   XX    XX   _    _
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    0                    _    _    _           _    _    _
+)
+
+;; ==========================================================================
+;; SYM  (hold physical n)  — ліва рука: shifted NUM; spc=)
+;; ==========================================================================
 (deflayer sym
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
-  _    _    _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
-  _    S-[  S-7  S-8  S-9  S-]   _    _    _    _     _    _    _    _      _    _    _
-  _    S-;  S-4  S-5  S-6  =     _    rsft rctl lalt  rmet _    _
-  _    S-`  S-1  S-2  S-3  S-\   _    _    _    _     _    _                     _
-  _    _    _                    _                    _    _    _         _    _    _
+  _    S-[  S-7  S-8  S-9  S-]   XX   XX   _    XX    XX   XX   _    _    _    _    _
+  _    S-;  S-4  S-5  S-6  S-=   XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    S-`  S-1  S-2  S-3  S-\   XX   XX   XX   XX    XX   _    _
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    S-0                  _    _    _           _    _    _
+)
+
+;; ==========================================================================
+;; FUN  (hold physical ,)  — ліва рука: F-keys grid
+;; ==========================================================================
+(deflayer fun
+  _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
+  _    f12  f7   f8   f9   S-prnt XX  XX   _    XX    XX   XX   _    _    _    _    _
+  _    f11  f4   f5   f6   slck  XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    f10  f1   f2   f3   pause XX   XX   XX   XX    XX   _    _
+  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    _                    _                    _    _    _           _    _    _
 )
