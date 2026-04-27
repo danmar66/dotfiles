@@ -57,12 +57,12 @@
   hm-p (tap-hold-release $tap-time $hold-time ; rmet)
 
   ;; ── Layer-triggers на фізичному bottom row ──
-  lt-x     (tap-hold-release $tap-time $hold-time x (layer-while-held media))
-  lt-c     (tap-hold-release $tap-time $hold-time c (layer-while-held nav))
-  lt-v     (tap-hold-release $tap-time $hold-time v (layer-while-held mouse))
-  lt-n     (tap-hold-release $tap-time $hold-time n (layer-while-held sym))
-  lt-m     (tap-hold-release $tap-time $hold-time m (layer-while-held num))
-  lt-comma (tap-hold-release $tap-time $hold-time , (layer-while-held fun))
+  lt-x     (tap-hold-release $tap-time $hold-time esc (layer-while-held media))
+  lt-c     (tap-hold-release $tap-time $hold-time spc (layer-while-held nav))
+  lt-v     (tap-hold-release $tap-time $hold-time tab (layer-while-held mouse))
+  lt-n     (tap-hold-release $tap-time $hold-time ret (layer-while-held sym))
+  lt-m     (tap-hold-release $tap-time $hold-time bspc (layer-while-held num))
+  lt-comma (tap-hold-release $tap-time $hold-time del (layer-while-held fun))
 
   ;; ── Clipboard (WIN) ──
   cb-und C-z
@@ -83,8 +83,8 @@
 ;; ==========================================================================
 (deflayer base
   esc       f1   f2   f3   f4    f5   f6   f7   f8    f9   f10  f11  f12    prnt slck pause
-  grv  q    w    e    r    t     y    u    i    o     p    -    =    bspc   ins  home pgup
-  tab  @hm-q @hm-w @hm-e @hm-r g  h    @hm-u @hm-i @hm-o @hm-p [    ]    \    del  end  pgdn
+  grv  q    w    e    r    t     y    u    i    o     p    [    ]    bspc   ins  home pgup
+  tab  @hm-q @hm-w @hm-e @hm-r g  h    @hm-u @hm-i @hm-o @hm-p '    ]    \    del  end  pgdn
   esc  z    x    c    v    b     n    m    ,    .     /    '    ret
   lsft z    @lt-x @lt-c @lt-v b   @lt-n @lt-m @lt-comma .    /    rsft                 up
   lctl lmet lalt                 spc                  ralt menu rctl      left down right
