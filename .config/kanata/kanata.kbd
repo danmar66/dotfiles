@@ -60,9 +60,9 @@
   lt-x     (tap-hold-release $tap-time $hold-time esc (layer-while-held media))
   lt-c     (tap-hold-release $tap-time $hold-time spc (layer-while-held nav))
   lt-v     (tap-hold-release $tap-time $hold-time tab (layer-while-held mouse))
-  lt-n     (tap-hold-release $tap-time $hold-time ret (layer-while-held sym))
-  lt-m     (tap-hold-release $tap-time $hold-time bspc (layer-while-held num))
-  lt-comma (tap-hold-release $tap-time $hold-time del (layer-while-held fun))
+  lt-b     (tap-hold-release $tap-time $hold-time ret (layer-while-held sym))
+  lt-n     (tap-hold-release $tap-time $hold-time bspc (layer-while-held num))
+  lt-m (tap-hold-release $tap-time $hold-time del (layer-while-held fun))
 
   ;; ── Clipboard (WIN) ──
   cb-und C-z
@@ -76,6 +76,8 @@
   mm-d (movemouse-accel-down  10 1000 2 20)
   mm-l (movemouse-accel-left  10 1000 2 20)
   mm-r (movemouse-accel-right 10 1000 2 20)
+
+  play-pause (push-msg "media:toggle")
 )
 
 ;; ==========================================================================
@@ -86,7 +88,7 @@
   grv  q    w    e    r    t     y    u    i    o     p    [    ]    bspc   ins  home pgup
   tab  @hm-q @hm-w @hm-e @hm-r g  h    @hm-u @hm-i @hm-o @hm-p '    ]    \    del  end  pgdn
   esc  z    x    c    v    b     n    m    ,    .     /    '    ret
-  lsft z    @lt-x @lt-c @lt-v b   @lt-n @lt-m @lt-comma .    /    rsft                 up
+  lsft z    @lt-x @lt-c @lt-v @lt-b @lt-n @lt-m ,  .  /         rsft            up
   lctl lmet lalt                 spc                  ralt menu rctl      left down right
 )
 
@@ -99,7 +101,7 @@
   _    XX   XX   XX   XX   XX    @cb-rdo @cb-pst _    @cb-cut @cb-cpy @cb-und _    _    _    _    _
   _    lmet lalt lctl lsft XX    caps left up   down  rght _    _    _    _    _    _
   _    XX   XX   XX   XX   XX    ins  home pgdn pgup  end  _    _
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    XX   XX   XX   XX    XX   XX   _    _     _    _                        _
   _    _    _                    _                    _    _    _           _    _    _
 )
 
@@ -109,10 +111,10 @@
 ;; ==========================================================================
 (deflayer mouse
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
-  _    XX   XX   XX   XX   XX    @cb-rdo @cb-pst _    @cb-cut @cb-cpy @cb-und _    mrtp _    _    _
-  _    lmet lalt lctl lsft XX    XX   @mm-l @mm-u @mm-d @mm-r _    _    _    mmtp _    _
-  _    XX   XX   XX   XX   XX    XX   XX   XX   XX    XX   _    mltp
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    XX   XX   XX   XX   XX    @cb-rdo @cb-pst _    @cb-cut @cb-cpy @cb-und _   _  _    _    _
+  _    lmet lalt lctl lsft XX    XX   @mm-l @mm-u @mm-d @mm-r _    _    _    _      _    _
+  _    XX   XX   XX   XX   XX    XX   XX   XX   XX    XX   _    _
+  _    _    XX   XX   XX   mrtp  mltp mmtp   _    _     _    _                        _
   _    _    _                    _                    _    _    _           _    _    _
 )
 
@@ -126,7 +128,7 @@
   _    XX   XX   XX   XX   XX    XX   XX   _    XX    XX   XX   _    mute _    _    _
   _    lmet lalt lctl lsft XX    XX   prev volu vold  next _    _    _    pp   _    _
   _    XX   XX   XX   XX   XX    XX   XX   XX   XX    XX   _    XX
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    XX   XX   XX   XX @play-pause  mute   _    _     _    _                        _
   _    _    _                    _                    _    _    _           _    _    _
 )
 
@@ -136,10 +138,10 @@
 (deflayer num
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
   _    [    7    8    9    ]     XX   XX   _    XX    XX   XX   _    _    _    _    _
-  _    ;    4    5    6    =     XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    ;    4    5    6    =     XX   rsft rctl lalt rmet _    _    _    _    _    _
   _    grv  1    2    3    \     XX   XX   XX   XX    XX   _    _
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
-  _    _    _                    0                    _    _    _           _    _    _
+  _    _    .    0    -    XX    XX   XX   _    _     _    _                        _
+  _    _    _                    XX                   _    _    _           _    _    _
 )
 
 ;; ==========================================================================
@@ -148,9 +150,9 @@
 (deflayer sym
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
   _    S-[  S-7  S-8  S-9  S-]   XX   XX   _    XX    XX   XX   _    _    _    _    _
-  _    S-;  S-4  S-5  S-6  S-=   XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    S-;  S-4  S-5  S-6  S-=   XX   rsft rctl lalt  rmet _    _    _    _    _    _
   _    S-`  S-1  S-2  S-3  S-\   XX   XX   XX   XX    XX   _    _
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    S-9  S-0  S--  XX    XX   XX   _    _     _    _                        _
   _    _    _                    S-0                  _    _    _           _    _    _
 )
 
@@ -160,8 +162,8 @@
 (deflayer fun
   _         _    _    _    _     _    _    _    _     _    _    _    _      _    _    _
   _    f12  f7   f8   f9   S-prnt XX  XX   _    XX    XX   XX   _    _    _    _    _
-  _    f11  f4   f5   f6   slck  XX   rsft lalt rctl  rmet _    _    _    _    _    _
+  _    f11  f4   f5   f6   slck  XX   rsft rctl lalt  rmet _    _    _    _    _    _
   _    f10  f1   f2   f3   pause XX   XX   XX   XX    XX   _    _
-  _    _    XX   XX   XX   _     XX   XX   XX   _     _    _                        _
+  _    _    menu   spc   tab   XX    XX   XX   _    _     _    _                        _
   _    _    _                    _                    _    _    _           _    _    _
 )
